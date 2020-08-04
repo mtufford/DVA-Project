@@ -1,0 +1,105 @@
+body {
+        padding: 0;
+        margin: 0;
+         }
+
+
+html, body {
+        height: 100%;
+        width: 100%;
+         }
+
+#map {
+        height: 100%;
+        width: 100%;
+             }
+
+
+#latlong{
+     color: #dedede;
+     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+     margin-bottom:5px;
+     margin-left: 5px;
+     bottom:5px;
+     z-index:999;
+     font-size: 12px;
+     position:fixed;
+  }
+
+.svglegendlabel{
+  padding-left: 1px;
+  margin-bottom: -5px;
+}
+
+#pointlegend{
+  padding:2px;
+  left:140em;
+  font-weight: 600;
+  font-size: x-small;
+  background-color: rgba(255,255,255,.9);
+  bottom:60em;
+  z-index:999;
+  position:fixed;
+  height:80px;
+}
+
+#yearselector{
+  z-index:1000;
+  width:200px;
+  height:100px;
+  left:250px;
+  top:250px;
+  position: fixed;
+  visibility: hidden;
+  background-color: rgba(255,255,255,.9);
+  padding:10px;
+}
+
+#stateselector{
+  z-index:1000;
+  width:200px;
+  height:100px;
+  left:250px;
+  top:250px;
+  position: fixed;
+  visibility: hidden;
+  background-color: rgba(255,255,255,.9);
+  padding:10px;
+}
+
+#chartdiv{
+  z-index:1000;
+  width:800px;
+  height:400px;
+  left:250px;
+  top:50px;
+  position: fixed;
+  visibility: hidden;
+  background-color: rgba(255,255,255,.9);
+  padding:10px;
+}
+
+
+#modeldiv{
+  z-index:1000;
+  width:200px;
+  height:450px;
+  left:250px;
+  top:50px;
+  position: fixed;
+  visibility: hidden;
+  background-color: rgba(255,255,255,.9);
+  padding:10px;
+}
+
+
+
+.leaflet-control-layers {
+    	box-shadow: none;
+    	background: #f0f0f0;
+
+    }
+.leaflet-touch .leaflet-control-layers-toggle {
+        width: 30px;
+        height: 30px;
+    }

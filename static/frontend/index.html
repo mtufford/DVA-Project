@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wildfires</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="/static/frontend/main.css"/>
+    <link rel="stylesheet" href="/static/frontend/spinner.css"/>
+    <link rel="stylesheet" href="/static/frontend/charts.css"/>
+
+
+</head>
+<body>
+    <div id="map"></div>
+    <div id="latlong"></div>
+    <div id="yearselector" class="ui-widget-content">
+    <center><h6> Year </h6>
+    <div id="timeslider"></div>
+    <label id="amount" style="color:#0394fc;"></center>
+    </div>
+
+    <div id="stateselector" class="ui-widget-content">
+    <center><h6> State </h6>
+      <select class="browser-default custom-select">
+        <option selected value="" >All</option>
+        <option value="AL">Alabama</option>
+      	<option value="AK">Alaska</option>
+      	<option value="AZ">Arizona</option>
+      	<option value="AR">Arkansas</option>
+      	<option value="CA">California</option>
+      	<option value="CO">Colorado</option>
+      	<option value="CT">Connecticut</option>
+      	<option value="DE">Delaware</option>
+      	<option value="DC">District Of Columbia</option>
+      	<option value="FL">Florida</option>
+      	<option value="GA">Georgia</option>
+      	<option value="HI">Hawaii</option>
+      	<option value="ID">Idaho</option>
+      	<option value="IL">Illinois</option>
+      	<option value="IN">Indiana</option>
+      	<option value="IA">Iowa</option>
+      	<option value="KS">Kansas</option>
+      	<option value="KY">Kentucky</option>
+      	<option value="LA">Louisiana</option>
+      	<option value="ME">Maine</option>
+      	<option value="MD">Maryland</option>
+      	<option value="MA">Massachusetts</option>
+      	<option value="MI">Michigan</option>
+      	<option value="MN">Minnesota</option>
+      	<option value="MS">Mississippi</option>
+      	<option value="MO">Missouri</option>
+      	<option value="MT">Montana</option>
+      	<option value="NE">Nebraska</option>
+      	<option value="NV">Nevada</option>
+      	<option value="NH">New Hampshire</option>
+      	<option value="NJ">New Jersey</option>
+      	<option value="NM">New Mexico</option>
+      	<option value="NY">New York</option>
+      	<option value="NC">North Carolina</option>
+      	<option value="ND">North Dakota</option>
+      	<option value="OH">Ohio</option>
+      	<option value="OK">Oklahoma</option>
+      	<option value="OR">Oregon</option>
+      	<option value="PA">Pennsylvania</option>
+      	<option value="RI">Rhode Island</option>
+      	<option value="SC">South Carolina</option>
+      	<option value="SD">South Dakota</option>
+      	<option value="TN">Tennessee</option>
+      	<option value="TX">Texas</option>
+      	<option value="UT">Utah</option>
+      	<option value="VT">Vermont</option>
+      	<option value="VA">Virginia</option>
+      	<option value="WA">Washington</option>
+      	<option value="WV">West Virginia</option>
+      	<option value="WI">Wisconsin</option>
+      	<option value="WY">Wyoming</option>
+        <option value="PR">Puerto Rico</option>
+      </select>
+    </center>
+    </div>
+
+    <div id="chartdiv" class="ui-widget-content">
+        <div class="tab">
+          <span id="distribution-label">Distribution by: </span>
+          <button id="causes-chart" class="tablinks" onclick="loadChart(event, 'Causes')">Cause</button>
+          <button id="firesizeclass-chart" class="tablinks" onclick="loadChart(event, 'FireSizeClass')">Size</button>
+          <button id="month-chart" class="tablinks" onclick="loadChart(event, 'Monthly')">Month</button>
+        </div>
+
+        <div id="Causes" class="tabcontent">
+            <div id="causes-chart-container"></div>
+        </div>
+
+        <div id="FireSizeClass" class="tabcontent">
+            <div id="firesizeclass-chart-container"></div>
+        </div>
+
+        <div id="Monthly" class="tabcontent">
+            <div id="monthly-chart-container"></div>
+        </div>
+    </div>
+
+    <div id="modeldiv" class="ui-widget-content">
+      <center>
+        <h6>Estimate Fire Cause</h6>
+        <form onSubmit="event.preventDefault();queryModel();">
+          <div class="form-group">
+            <label for="LatitudeEntry">Latitude</label>
+            <input required type="number" step= ".000001" class="form-control" id="LatitudeEntry" >
+          </div>
+          <div class="form-group">
+            <label for="LongitudeEntry">Longitude</label>
+            <input required type="number" step= ".000001" class="form-control" id="LongitudeEntry">
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="DateEntry">Date</label>
+            <input required class="form-control" id="DateEntry" name="date" placeholder="MM-DD-YYYY" type="text"/>
+          </div>
+
+          <div id="mlmodelselector" class="form-group">
+            <label for="MLSelector">ML Model</label>
+
+            <select id = "ModelEntry" class="browser-default custom-select">
+              <option selected value="RF">Random Forest</option>
+              <option value="KNN">KNN</option>
+              <option value="ADABOOST">AdaBoost</option>
+              <option value="HISTGRADBOOST">HistGradBoost</option>
+            </select>
+
+          </div>
+
+
+          <button type="submit" class="btn btn-primary">Run Model</button>
+          </form>
+        </center>
+    </div>
+    <div id="pointlegend">
+    </div>
+
+
+
+
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
+<script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<script src="/static/frontend/calls.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="/static/frontend/map.js"></script>
+<script src="/static/frontend/controls.js"></script>
+<script src="/static/frontend/points.js"></script>
+<script src="/static/frontend/charts.js"></script>
+<script src="/static/frontend/main.js"></script>
+
+</html>

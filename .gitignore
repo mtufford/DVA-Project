@@ -1,0 +1,10 @@
+*.zip
+*.sqlite
+venv*
+*.pdf
+__pycache__/*
+.idea
+lib/__pycache__/*
+*.csv
+tmp
+lib/*.z
